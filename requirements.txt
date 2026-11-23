@@ -1,0 +1,44 @@
+
+# FastAPI and server
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Configuration and validation
+pydantic
+pydantic-settings
+python-dotenv
+
+# Groq
+groq
+
+# Data processing
+pandas
+numpy
+openpyxl
+
+# Database
+sqlalchemy
+aiosqlite
+
+# Machine learning and forecasting
+scikit-learn
+statsmodels
+
+# Visualisation
+plotly
+streamlit
+
+# RAG and document processing
+sentence-transformers
+chromadb
+pypdf
+
+# Report generation
+reportlab
+matplotlib
+
+# Testing
+pytest
+httpx
+

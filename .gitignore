@@ -1,0 +1,16 @@
+
+.venv/
+__pycache__/
+*.py[cod]
+
+.env
+.pytest_cache/
+
+data/uploads/*
+data/processed/*
+vector_store/*
+reports/*
+
+financial_intelligence.db
+
+.vscode/
