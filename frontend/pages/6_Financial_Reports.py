@@ -4,7 +4,8 @@ import streamlit as st
 from utils.api import download_report
 from utils.common import (
     initialize_session,
-    show_dataset_selector
+    show_dataset_selector,
+    render_floating_assistant
 )
 
 
