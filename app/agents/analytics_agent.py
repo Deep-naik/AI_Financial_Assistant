@@ -105,14 +105,98 @@ class AnalyticsAgent:
                     )
                 }
 
+            
             # 7. Dimension analysis
+            analysis = self.analytics_service.calculate_dimension_analysis(
+                df, dimension
+            )
+
+            results = analysis.get("results", [])
+
+            answer = "No dimension analysis results are available."
+
+            if results:
+
+                # Identify the metric requested
+                if "profit margin" in question_lower or "margin" in question_lower:
+                    metric = "profit_margin_percentage"
+                    metric_name = "profit margin"
+                    suffix = "%"
+                elif "profit" in question_lower:
+                    metric = "profit"
+                    metric_name = "profit"
+                    suffix = ""
+                elif "revenue" in question_lower or "sales" in question_lower:
+                    metric = "revenue"
+                    metric_name = "revenue"
+                    suffix = ""
+                elif "units" in question_lower:
+                    metric = "units_sold"
+                    metric_name = "units sold"
+                    suffix = ""
+                elif "discount" in question_lower:
+                    metric = "discounts"
+                    metric_name = "discounts"
+                    suffix = ""
+                elif "expense" in question_lower or "cogs" in question_lower:
+                    metric = "expenses"
+                    metric_name = "expenses"
+                    suffix = ""
+                else:
+                    metric = "revenue"
+                    metric_name = "revenue"
+                    suffix = ""
+
+                # Identify highest or lowest category
+                lowest_requested = any(word in question_lower for word in [
+                    "lowest", "least", "minimum", "worst"
+                ])
+
+                if lowest_requested:
+                    best_category = min(
+                        results,
+                        key=lambda item: item[metric]
+                    )
+                    comparison = "lowest"
+                else:
+                    best_category = max(
+                        results,
+                        key=lambda item: item[metric]
+                    )
+                    comparison = "highest"
+
+                category_name = best_category["name"]
+                metric_value = best_category[metric]
+
+                formatted_value = f"{metric_value:,.2f}{suffix}"
+
+                answer = (
+                    f"{category_name} generated the {comparison} "
+                    f"{metric_name} among all {dimension}s, "
+                    f"with {formatted_value}."
+                )
+
+                # Add additional context
+                answer += (
+                    f"\n\nIts total revenue was "
+                    f"{best_category['revenue']:,.2f} "
+                    f"and its total profit was "
+                    f"{best_category['profit']:,.2f}."
+                )
+
+                answer += (
+                    f"\nIts profit margin was "
+                    f"{best_category['profit_margin_percentage']}%."
+                )
+
+            analysis["answer"] = answer
+
             return {
                 "agent": "analytics",
                 "analysis_type": "dimension_analysis",
-                "result": self.analytics_service.calculate_dimension_analysis(
-                    df, dimension
-                )
+                "result": analysis
             }
+
 
         raise ValueError(
             "Unable to identify the requested analytics operation."

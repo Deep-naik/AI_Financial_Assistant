@@ -45,11 +45,23 @@ class FinancialVectorStore:
 
     def search(self, query, n_results=3, where=None):
 
-        query_embedding = self.embedding_service.generate_embedding(query)
+        collection_count = self.collection.count()
+
+        if collection_count == 0:
+            return {
+                "ids": [[]],
+                "documents": [[]],
+                "metadatas": [[]],
+                "distances": [[]]
+            }
+
+        query_embedding = (
+            self.embedding_service.generate_embedding(query)
+        )
 
         results = self.collection.query(
             query_embeddings=[query_embedding],
-            n_results=min(n_results, self.collection.count()),
+            n_results=min(n_results, collection_count),
             where=where
         )
 

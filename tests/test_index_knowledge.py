@@ -6,7 +6,7 @@ from app.rag.vector_store import FinancialVectorStore
 
 
 df = pd.read_csv(
-    "data/processed/financial_sample_cleaned.csv"
+    "data/processed/78667e6f-4ac9-4562-8e6f-c43b8211728f.csv"
 )
 
 # Build actual financial knowledge

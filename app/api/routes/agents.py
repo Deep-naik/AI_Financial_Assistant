@@ -46,13 +46,24 @@ def ask_financial_question(request: AgentQuestionRequest):
             request.question
         )
 
-        # 4. Return agent response
+        # 4. Prepare agent response
+        agent_result = result.get("result", {})
+
+        # Include human-readable answer if provided by the agent
+        if result.get("answer"):
+            agent_result["answer"] = result["answer"]
+
+        # Include forecast period information if available
+        if result.get("forecast_periods"):
+            agent_result["forecast_periods"] = result["forecast_periods"]
+
+        # 5. Return agent response
         return {
             "status": "success",
             "dataset_id": request.dataset_id,
             "agent": result["agent"],
             "analysis_type": result["analysis_type"],
-            "result": result["result"]
+            "result": agent_result
         }
 
     except HTTPException:
